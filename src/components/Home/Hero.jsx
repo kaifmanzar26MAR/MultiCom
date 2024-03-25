@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -15,9 +16,9 @@ const Hero = () => {
           <h1 className="text-[14vmin] lg:text-[25vmin] font-bold text-white stroke-gray-500 ">
             Headphone
           </h1>
-          <button className=" w-32 p-2 text-xl rounded-full bg-red-600 font-semibold text-white hover:bg-red-700">
-            Buy Now
-          </button>
+          <Link to={`/productview/660152f212decafb3b84712b`}><button className=" w-fit px-4 py-2 text-xl rounded-full bg-red-600 font-semibold text-white hover:bg-red-700">
+            View product
+          </button></Link>
         </div>
         <div className="w-full flex justify-end items-end">
           <div className="w-56 text-right">

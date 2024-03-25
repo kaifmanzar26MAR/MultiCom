@@ -20,6 +20,37 @@ const AllProductCara = () => {
     }
   };
 
+  const addToCart = async (product_id) => {
+    // console.log(quantity);
+    
+    const source = axios.CancelToken.source();
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/product/addtocart",
+        {
+          user_id: "65e4a52a6a691876ff3a2fea",
+          product_id,
+          quantity:1,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          cancelToken: source.token,
+        }
+      );
+
+      if (response.status === 201) {
+        alert(response.data.message);
+        window.location.reload();
+      } else {
+        throw new ApiError(500, "Error in adding Prodcut to cart");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     // window.scrollTo(0, 0); // Scroll to the top of the window
     const source = axios.CancelToken.source();
@@ -57,8 +88,8 @@ const AllProductCara = () => {
                           View Details
                         </div>
                       </Link>
-                      <div class="badge badge-outline p-5 font-semibold hover:bg-gray-200 cursor-pointer">
-                        Buy @<span>Rs.5000/-</span>
+                      <div class="badge badge-outline p-5 font-semibold hover:bg-gray-200 cursor-pointer" onClick={()=>addToCart(e._id)}>
+                        Add To Cart
                       </div>
                     </div>
                   </div>
