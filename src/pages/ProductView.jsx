@@ -110,6 +110,7 @@ const ProductView = () => {
 
       if (response.status === 201) {
         alert(response.data.message);
+        window.location.reload();
       } else {
         throw new ApiError(500, "Error in adding Prodcut to cart");
       }
