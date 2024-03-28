@@ -2,14 +2,16 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { useParams } from "react-router-dom";
+import useGetUser from "../hooks/getUserhook";
 
 const ProductView = () => {
   const { id } = useParams();
-  console.log(id);
+  // console.log(id);
   const [data, setData] = useState({});
   const [allReviews, setAllReviews] = useState([]);
   const [reviewText, setReviewText] = useState("");
   const [quantity, setQuantity] = useState(1);
+  // const {user,loading}= useGetUser();
 
   const fetchProduct = async (product_id, source) => {
     console.log(product_id);
@@ -65,7 +67,6 @@ const ProductView = () => {
       const res = await axios.post(
         "http://localhost:5000/product/addreview",
         {
-          user_id: "65e4a52a6a691876ff3a2fea",
           product_id: data._id,
           reviewtext: reviewText,
           ratings: 4,
@@ -74,6 +75,7 @@ const ProductView = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          withCredentials:true,
           cancelToken: source.token,
         }
       );
@@ -96,7 +98,7 @@ const ProductView = () => {
       const response = await axios.post(
         "http://localhost:5000/product/addtocart",
         {
-          user_id: "65e4a52a6a691876ff3a2fea",
+          // user_id: "65e4a52a6a691876ff3a2fea",
           product_id: data._id,
           quantity,
         },
@@ -104,6 +106,7 @@ const ProductView = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          withCredentials:true,
           cancelToken: source.token,
         }
       );
