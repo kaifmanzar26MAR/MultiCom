@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { useParams } from "react-router-dom";
-import useGetUser from "../hooks/getUserhook";
+import CategorySuggition from "../components/View/CategorySuggition";
 
 const ProductView = () => {
   const { id } = useParams();
@@ -123,14 +123,18 @@ const ProductView = () => {
   };
 
   useEffect(() => {
+    window.scrollTo({top:0})
     const source = axios.CancelToken.source();
     setAllReviews([]);
+    setReviewText("");
+    setQuantity(1);
     fetchProduct(id, source);
 
     return () => {
       source.cancel("Request canceled due to component unmounting");
     };
-  }, []);
+  }, [id]);
+ 
   const {
     product_id,
     product_imageUrl,
@@ -230,6 +234,7 @@ const ProductView = () => {
               </div>
             );
           })}
+
           {/* 
           <div className="review border rounded-lg w-full lg:w-1/2">
             <div className="flex gap-2 items-center justify-start p-2">
@@ -459,6 +464,8 @@ const ProductView = () => {
           </button>
         </div>
       </div>
+      <br />
+      { data.product_category ? <CategorySuggition category={data?.product_category} current_product={data?._id}/>: ""}
     </div>
   );
 };

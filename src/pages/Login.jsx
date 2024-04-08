@@ -1,8 +1,12 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import useGetUser from "../hooks/getUserhook";
 
 const Login = () => {
   const [loginData, setLoginData] = useState({ email: "", password: "" });
+  const navigate= useNavigate();
+  const {user} = useGetUser();
   const handleLogin = async (e) => {
     e.preventDefault();
     console.log(loginData);
@@ -23,11 +27,19 @@ const Login = () => {
       }
       console.log(res.data.data);
       alert(res.data.message);
+      navigate('/');
     } catch (error) {
       console.log(error);
       alert(error.response.data.message);
     }
   };
+
+  useEffect(()=>{
+    if(user){
+      navigate('/');
+    }
+  },[user])
+
   return (
     <div className="w-full h-screen bg-slate-100 flex justify-center items-center">
       <div className="w-full lg:w-1/2 flex justify-center items-center bg-slate-50 p-5 rounded-xl shadow-xl ">

@@ -22,6 +22,7 @@ const CategoryProduct = () => {
     }
   };
   useEffect(() => {
+    window.scrollTo({top:0})
     const source = axios.CancelToken.source();
     fetchProducts(source);
     return () => {

@@ -1,7 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useGetUser from "../hooks/getUserhook.js";
+
+
+
 const Navbar = () => {
   // const [user, setUser] = useState(null);
   // const fetchUser = async () => {
@@ -18,11 +21,64 @@ const Navbar = () => {
   //   }
   // }
   const { user, loading } = useGetUser();
+  const [products,setProducts]=useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const navigate = useNavigate();
+  const LogoutUser = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/user/logout");
+      if (res.status != 200) {
+        throw new Error("Error in logout");
+      }
+      alert("user Logout");
+      navigate("/login");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   // console.log(user)
- 
+
+  const handleSearch = (e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+    if(term===''){
+      setSearchResults([]);
+      return;
+    }
+
+    const results = products.filter(
+      (product) =>
+        product.product_title.toLowerCase().includes(term.toLowerCase()) ||
+        product.product_category.toLowerCase().includes(term.toLowerCase()) ||
+        product.product_description.toLowerCase().includes(term.toLowerCase())
+    );
+
+
+
+    setSearchResults(results);
+    // console.log(results)
+  };
+
   useEffect(() => {
-    
-    console.log(user)
+    console.log(user);
+    const fetchProdcuts = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/product/getallproducts", {
+            // cancelToken: source.token
+          }
+        );
+        if (!response) {
+          throw new ApiError(500, "Error in fetching prodcut");
+        }
+        console.log(response.data);
+        setProducts(response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchProdcuts();
   }, [user]);
 
   return (
@@ -62,11 +118,23 @@ const Navbar = () => {
             About Us
           </a>
         </Link>
-        <label className="input flex items-center gap-2 outline-none mx-2">
+      {searchTerm!='' ? <ul className="absolute top-16 w-[90%] mx-12 bg-gray-50 rounded-lg p-2 max-h-screen overflow-auto flex flex-col gap-y-2" style={{}}>
+          {searchResults.length>0 ? searchResults.map((product) => (
+            <Link to={`/productview/${product._id}`}><li onClick={()=>{setSearchTerm('');}} key={product._id} className="border-2 border-gray-400 rounded-lg p-2 flex gap-2 hover:bg-red-500 hover:text-white cursor-pointer">
+              <h3>{product.product_title}</h3>
+              <p>{product.product_category}</p>
+              <p className="w-60 truncate">{product.product_description}</p>
+            </li></Link>
+          )): <p>No Data Found!!</p>}
+        </ul> : ""}
+        <label className="input flex items-center gap-2 outline-none mx-2 ">
+          
           <input
             type="text"
             className="grow w-28 lg:w-52"
             placeholder="Search"
+            value={searchTerm}
+            onChange={handleSearch}
           />
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -152,7 +220,13 @@ const Navbar = () => {
               <a>Settings</a>
             </li>
             <li>
-              <a>Logout</a>
+              {user ? (
+                <p onClick={LogoutUser}>Logout</p>
+              ) : (
+                <Link to={"/login"}>
+                  <p>Login</p>
+                </Link>
+              )}
             </li>
           </ul>
         </div>

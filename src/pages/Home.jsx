@@ -5,6 +5,7 @@ import AllProductCara from "../components/Home/AllProductCara";
 import axios from 'axios'
 const Home = () => {
   useEffect(()=>{
+    window.scrollTo({top:0})
     const fetchData= async ()=>{
       try {
         const res=await axios.get('http://127.0.0.1:5000/')
