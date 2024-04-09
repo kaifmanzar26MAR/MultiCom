@@ -7,7 +7,7 @@ import CategorySuggition from "../components/View/CategorySuggition";
 const ProductView = () => {
   const { id } = useParams();
   // console.log(id);
-  const [data, setData] = useState({});
+  const [data, setData] = useState(null);
   const [allReviews, setAllReviews] = useState([]);
   const [reviewText, setReviewText] = useState("");
   const [quantity, setQuantity] = useState(1);
@@ -128,12 +128,23 @@ const ProductView = () => {
     setAllReviews([]);
     setReviewText("");
     setQuantity(1);
+    setTimeout(()=>{
     fetchProduct(id, source);
+    },200)
+    
 
     return () => {
       source.cancel("Request canceled due to component unmounting");
     };
   }, [id]);
+
+  if(!data){
+    return(
+      <div className='w-full h-screen bg-white'>
+        <img src="/basketLoader.gif" alt="loader"  className="w-full h-full object-contain"/>
+      </div>
+    )
+  }
  
   const {
     product_id,

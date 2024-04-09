@@ -7,6 +7,7 @@ const Cart = () => {
   const [userCart, setUserCart] = useState([]);
   const [totalCost, setTotalCost] = useState(0);
   const { user, loading } = useGetUser();
+  const [loaderFlag, setLoaderFlag]=useState(true);
   const fetchUser = async () => {
     try {
       const cart = user?.cart;
@@ -21,6 +22,7 @@ const Cart = () => {
             },
           }
         );
+        
         return {
           product: product.data.data,
           quantity: e.quantity,
@@ -32,6 +34,7 @@ const Cart = () => {
 
       // Update cartData array with resolved product data
       setUserCart(resolvedProducts);
+      setLoaderFlag(false)
       console.log(resolvedProducts);
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -62,7 +65,10 @@ const Cart = () => {
 
   useEffect(() => {
     window.scrollTo({top:0})
-    fetchUser();
+    setTimeout(()=>{
+      fetchUser();
+    },200)
+    
   }, [user]);
 
   useEffect(() => {
@@ -77,6 +83,16 @@ const Cart = () => {
     // Update totalCost state
     setTotalCost(cost);
   }, [userCart]);
+
+  if(loaderFlag){
+    return(
+      <div className='w-full h-screen bg-white'>
+        <img src="/basketLoader.gif" alt="loader"  className="w-full h-full object-contain"/>
+      </div>
+    )
+  }
+
+
   return (
     <div className="w-full flex flex-col px-5 min-h-screen">
       <h1 className="text-2xl font-semibold">Cart Page</h1>

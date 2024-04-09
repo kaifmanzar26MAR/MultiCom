@@ -81,6 +81,8 @@ const Navbar = () => {
     fetchProdcuts();
   }, [user]);
 
+  
+
   return (
     <div className="navbar bg-base-100 text-gray-400 sticky top-0 h-[40px] z-50">
       <div className="flex-1">

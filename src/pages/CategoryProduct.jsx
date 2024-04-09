@@ -6,6 +6,7 @@ import ProductListCard from "../components/ProductListCard";
 const CategoryProduct = () => {
   const [allProducts, setAllProducts] = useState([]);
   const { category } = useParams();
+  const [loader, setLoader]=useState(true);
   const fetchProducts = async (source) => {
 
     try {
@@ -17,6 +18,7 @@ const CategoryProduct = () => {
         throw new Error("Error in geting poduct related to the category");
       }
       setAllProducts(response.data.data);
+      setLoader(false)
     } catch (error) {
       console.log(error);
     }
@@ -24,11 +26,22 @@ const CategoryProduct = () => {
   useEffect(() => {
     window.scrollTo({top:0})
     const source = axios.CancelToken.source();
-    fetchProducts(source);
+    setTimeout(()=>{
+      fetchProducts(source);
+    },200)
+    
     return () => {
       source.cancel("Request canceled due to component unmounting");
     };
   }, []);
+
+  if(loader){
+    return(
+      <div className='w-full h-screen bg-white'>
+        <img src="/basketLoader.gif" alt="loader"  className="w-full h-full object-contain"/>
+      </div>
+    )
+  }
   return (
     <div className="flex gap-y-2 flex-col p-4">
       {allProducts.length > 0
